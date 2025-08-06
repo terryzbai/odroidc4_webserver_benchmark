@@ -1,0 +1,31 @@
+#!/bin/bash
+
+ip link set eth0 up
+sleep 10
+udhcpc && \
+
+## Test nginx without NFS
+# mkdir -p /mnt/nfs
+# mkdir -p /mnt/nfs/images
+# mv /root/cpu.jpg /mnt/nfs/images
+# echo "index.html" > /mnt/nfs/index.html
+# echo "roadmap.html" > /mnt/nfs/roadmap.html
+
+cat > test.conf << 'EOF'
+events {}
+http {
+    server {
+        listen 0.0.0.0:80;
+        root /mnt/nfs/www;
+        index index.html;
+        location / {
+            try_files $uri $uri/ =404;
+        }
+    }
+}
+
+EOF
+
+
+nginx -s stop
+nginx -c /root/test.conf
