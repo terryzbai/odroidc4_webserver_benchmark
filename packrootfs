@@ -85,9 +85,14 @@ mkdir -p "$tmpdir/etc/init.d"
 mkdir -p "$tmpdir/etc/ssh"
 
 # Copy home files to /root
-for file in "${home_files[@]}"; do
-    cp -- "$file" "$tmpdir/root/$(basename "$file")"
-    chmod +x "$tmpdir/root/$(basename "$file")"
+for path in "${home_files[@]}"; do
+    if [ -d "$path" ]; then
+        cp -rP "$path"/* "$tmpdir/root/"
+    else
+        cp -P "$path" "$tmpdir/root/$(basename "$file")"
+        chmod +x "$tmpdir/root/$(basename "$file")"
+    fi
+    # cp -- "$file" "$tmpdir/root/$(basename "$file")"
 done
 
 # Copy startup files to /etc/init.d and prefix with S99

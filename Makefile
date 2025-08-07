@@ -8,7 +8,7 @@ $(BUILD_DIR):
 
 $(BUILD_DIR)/%_rootfs.cpio.gz: $(TOOL_DIR)/%_rootfs.cpio.gz $(BUILD_DIR)
 	$(TOOL_DIR)/packrootfs $< $(BUILD_DIR)/rootfs -o $@ \
-	    --home $(TOOL_DIR)/init_script $(TOOL_DIR)/cpu.jpg
+	    --home $(TOOL_DIR)/init_script $(TOOL_DIR)/cpu.jpg $(TOOL_DIR)/webserver
 
 $(BUILD_DIR)/%_initramfs.img: $(BUILD_DIR)/%_rootfs.cpio.gz
 	mkimage -A arm -O linux -T ramdisk -n "Initial Ram Disk" -d $< $@
@@ -26,3 +26,6 @@ qemu: $(BUILD_DIR)/qemu_rootfs.cpio.gz
 odroidc4: $(BUILD_DIR)/odroidc4_initramfs.img
 
 all:
+
+clean:
+	rm -rf $(BUILD_DIR)
